@@ -1,0 +1,48 @@
+.side_panel{
+  background-color: #F7F7F7;
+  width: 224px;
+
+  .side_panel_top{
+    text-align: center;
+    margin: 20px auto;
+    text-transform: uppercase;
+    font-style: normal;
+    color: #3B3B3B;
+
+    h1{
+      font-size: $myFontSize;
+      font-weight: 700;
+      line-height: 160%;
+      letter-spacing: 0.03em;
+    }
+    p{
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 160%;
+      letter-spacing: 0.2px;
+      margin-top: 2px;
+    }
+  }
+  .side_panel_main{
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    flex-direction: unset;
+    align-items: center;
+    height: 44px;
+    background-color: #EEEEEE;
+    p{
+      margin-left: 12px;
+      color: $colorGreen;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    svg{
+      margin-top: 4px;
+    }
+
+  }
+}

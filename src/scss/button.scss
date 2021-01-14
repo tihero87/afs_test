@@ -1,0 +1,50 @@
+.btn,input{
+  width: 400px;
+  height: 40px;
+  border: 1px solid #E5E5E5;
+  box-sizing: border-box;
+  border-radius: 2px;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 160%;
+  color: $colorGreen;
+  text-transform: uppercase;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  outline: none;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+  .icon_plus{
+    position: absolute;
+    left: 12px;
+    top: 12px;
+  }
+  &:hover{
+    color: #98C88C;
+    border: 1px solid #CDCDCD;
+      path {
+        fill: #98C88C;
+      }
+  }
+  &:active{
+    color: #58A742;
+    border: 1px solid #CDCDCD;
+      path {
+        fill: #58A742;
+      }
+  }
+}
+input{
+  color: $colorGray;
+  margin-bottom: 20px;
+  &:hover{
+    color: $colorBlack
+  }
+}
+
+

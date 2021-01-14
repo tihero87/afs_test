@@ -1,0 +1,70 @@
+.inputWrapper{
+  position: relative;
+  width: 400px;
+  height: 40px;
+  margin-bottom: 20px;
+
+  input{
+    margin: 0;
+    padding: 0 12px;
+    position: absolute;
+    width: 400px;
+    height: 40px;
+    border: 1px solid #CDCDCD;
+    box-sizing: border-box;
+    border-radius: 2px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #808080;
+
+    &:hover{
+      border: 1px solid #808080;
+    }
+    &:focus{
+      border: 1px solid #3B3B3B;
+    }
+  }
+  label{
+    color: #808080;
+  }
+
+  .inputLabel{
+    position: absolute;
+    top:10px;
+    left: 12px;
+    color: #808080 !important;
+    background: #FFFFFF;
+    text-transform: lowercase;
+    font-size: 10px;
+  }
+  .inputLabel.empty{
+    left: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 20px;
+  }
+
+  .inputLabel.notEmpty,
+  .inputLabel:hover,
+  .inputLabel:focus,
+  .inputLabel.notEmpty:hover,
+  .inputLabel.notEmpty:focus{
+    left: 8px;
+    top: -6px;
+    line-height: 12px;
+    padding: 0 5px;
+    z-index: 2;
+  }
+
+
+  .inputRequired{
+    color: #808080 !important;
+  }
+
+  .inputError{
+    position: absolute;
+    width: 400px;
+    border-bottom: 1px solid red;
+  }
+
+}

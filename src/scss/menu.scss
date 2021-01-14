@@ -1,0 +1,27 @@
+.menu{
+  background-color: $colorGreen;
+  max-width: 48px;
+  //height: 900px;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .icon_box{
+    transition: 4ms;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 48px;
+    &:hover{
+      background-color: #A4C7A5;
+      cursor: pointer;
+    }
+    &.selected{
+      background-color: #A4C7A5;
+    }
+  }
+
+}

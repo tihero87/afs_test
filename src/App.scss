@@ -1,0 +1,31 @@
+@import './scss/fonts.scss';
+@import "./scss/variables.scss";
+@import "./scss/sidebar";
+@import "./scss/menu.scss";
+@import "./scss/sidepanel.scss";
+@import "./scss/main.scss";
+@import "./scss/organization.scss";
+@import "./scss/button.scss";
+@import "./scss/modal";
+@import "./scss/form";
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.wrap{
+  background-color: #FFFFFF;
+  overflow: hidden;
+  .base{
+    display: flex;
+    //margin: 0 auto;
+    width: 100%;
+    font-family: $myFont;
+    font-size: $myFontSize;
+    color: $colorGray;
+    svg:hover{
+      cursor: pointer;
+    }
+  }
+}
