@@ -19,10 +19,8 @@ function OrganizationList({token}) {
         setOrganizations(organizations.filter(item => {
             return item.id !== newOrg.id
         }).concat(newOrg));
-        console.log("Теперь: ", organizations);
         selectOrg(newOrg.id);
     }
-
 
     return(
         <>
@@ -40,7 +38,7 @@ function OrganizationList({token}) {
             }
 
             {
-               org !== null  && <Organization org={org} showListOrg={resetOrg} token={token} addOrgFromAPI={addOrgFromAPI} />
+               org !== null  && <Organization org={org} showListOrg={resetOrg} token={token} addOrgFromAPI={addOrgFromAPI}/>
             }
         </>
     )

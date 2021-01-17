@@ -25,7 +25,7 @@ const SendRequest = (METHOD, URL, TOKEN) => {
                 setOrg(data);
             });
     },[]);
-    //console.log("Из кастомного хука инфа: ", org);
+
 return org;
 
 };

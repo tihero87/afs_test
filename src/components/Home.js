@@ -1,6 +1,8 @@
 import React from 'react';
+import MyInput from "./MyInput";
+import Button from "./Button";
 
-function Home({user, handleChange, getToken}) {
+function Home({user, getToken}) {
 
     return(
         <div className="main">
@@ -9,16 +11,10 @@ function Home({user, handleChange, getToken}) {
             </div>
             <br/>
             <div className="main_body">
-                <label>Имя</label>
-                <input id="name" type="text" value={user} className="" onChange={handleChange}>
-
-                </input>
-                <button className="btn" onClick={getToken} >
-                    Login
-                </button>
+                <MyInput id="username" className="input" label="username" placeholder={user}  />
+                <Button className="btn" name="Получить токен" btnClick={getToken} />
             </div>
         </div>
-
     )
 }
 export default Home;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect} from 'react'
 import IconEdit from "./icons/IconEdit";
 import IconClose from "./icons/IconClose";
 import Button from "./Button";
@@ -12,18 +12,17 @@ import {DefaultContact} from '../utils/defaultContact';
 import MyInput from "./MyInput";
 
 function Organization({org, showListOrg, token, addOrgFromAPI}) {
+
     const [loader, setLoader] = useState(true);
     const [orgApi, setOrgApi] = useState(org);
     const [contact, setContact] = useState(DefaultContact);
-
     const [editInput, setEditInput] = useState(0);
+    const [addPhotoInput, setAddPhotoInput] = useState(false);
 
     let data = SendRequest("GET", `${API_URL}/companies/${org.id}`, token);
-
     useEffect(() => {
         if(data !==null && data !== undefined && loader === true){
             setOrgApi(data);
-            setLoader(false);
             addOrgFromAPI(data);
         }
         if(data === undefined){
@@ -33,28 +32,52 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
     },[data]);
 
     let contactApi = SendRequest("GET", `${API_URL}/contacts/${orgApi.contactId}`, token);
-
     useEffect(() => {
-        if(contactApi !== null && contactApi !== undefined){
+        if(contactApi !== null && contactApi !== undefined && loader === true){
             setContact(contactApi);
+            setLoader(false);
         }
     });
 
-    async function myRequest(method, url, token) {
+    async function myRequest(method, url, token, obj) {
         return await fetch(url,{
             method: method,
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': token,
-            }
+            },
+            body: JSON.stringify(obj)
         })
     }
 
     const addPhoto = () => {
-        console.log("хочу добавить фото");
-    };
-    const delPhoto = (namePhoto) => {
+        setAddPhotoInput(true);
+        if(addPhotoInput){
+            let attach = document.getElementById("photoinput").files[0];
+            const formData = new FormData();
+            formData.append('file', attach);
 
+            fetch(`${API_URL}/companies/${orgApi.id}/image`, {
+                method: "POST",
+                headers: {
+                    'Authorization': `${token}`
+                },
+                body: formData
+
+            }).then(res => {
+                if(res.status === 200){
+                    return res.json();
+                }
+            }).then(data => {
+                let newOrg = {...orgApi};
+                newOrg.photos = [...newOrg.photos, data];
+                setOrgApi(newOrg);
+            });
+
+            setAddPhotoInput(false);
+        }
+    };
+
+    const delPhoto = (namePhoto) => {
         if(token !== ""){
             myRequest("DELETE", `${API_URL}/companies/${orgApi.id}/image/${namePhoto}`, token)
                 .then(response => {
@@ -62,12 +85,10 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
                         let delPhoto = orgApi.photos.filter(el => {
                             return el.name !== namePhoto;
                         });
-                        let newOrg = orgApi;
+                        let newOrg = {...orgApi};
                         newOrg.photos = delPhoto;
-                        console.log("Новый объект без фото ", newOrg);
                         setOrgApi(newOrg);
-
-                       return console.log(`Фото ${namePhoto} было удалено ...`)
+                        console.log(`Фото ${namePhoto} было удалено ...`)
                     }
                     else {
                         console.log("Что-то пошло не так...")
@@ -81,7 +102,7 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
             myRequest("DELETE", `${API_URL}/companies/${id}`, token)
                 .then(response => {
                     if(response.status === 200){
-                       return console.log(`Организация ${orgApi.name} была удалена ...`);
+                        return console.log(`Организация ${orgApi.name} была удалена ...`);
                     }
                     else {
                         console.log("Что-то пошло не так...")
@@ -93,13 +114,83 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
     const clickEdit = (id) => {
         setEditInput(id);
     };
-    const sendEditData = () => {
-      setEditInput(0);
+
+    const sendEditData = (num) => {
+        let obj = {};
+        let update_obj = {};
+        let url_postfix = `companies/${orgApi.id}`;
+
+        if(num === 1) {
+            obj.shortName = document.getElementById("org_shortName").value;
+        }
+        if(num === 2) {
+            obj.name = document.getElementById("org_name").value;
+            let contract = document.getElementById("org_contract").value;
+            let contract_arr = contract.split(" ");
+            obj.contract = {};
+            obj.contract.no = contract_arr[0];
+            obj.contract.issue_date = contract_arr[1];
+            obj.businessEntity = document.getElementById("org_businessEntity").value;
+            let org_type = document.getElementById("org_type").value;
+            obj.type = org_type.split(" ");
+        }
+        if(num === 3) {
+            let fio = document.getElementById("contact_fio").value;
+            let fio_arr = fio.split(" ");
+            obj.lastname = fio_arr[0];
+            obj.firstname = fio_arr[1];
+            obj.patronymic = fio_arr[2];
+            obj.phone = document.getElementById("contact_tel").value;
+            obj.email = document.getElementById("contact_mail").value;
+        }
+
+        let count = 0;    //  флаг, дабы не отправлять запрос если объект пустой {}
+        let sel = {...orgApi};
+        if(num === 3) {
+            sel = {...contact};
+            url_postfix = `contacts/${orgApi.contactId}`;
+        }
+        for (let param in obj){
+            if(sel[param] !== obj[param]){
+                update_obj[param] = obj[param];
+                count++;
+            }
+        }
+
+        if (count !== 0){
+             myRequest("PATCH", `${API_URL}/${url_postfix}`, token, JSON.stringify(update_obj))
+                .then(response => {
+                    if(response.status === 200){
+                        let obj_update_state = {...sel};
+                        for (let param in update_obj){
+                            obj_update_state[param] = update_obj[param];
+                        }
+                        if(num === 3){
+                            obj_update_state={...obj_update_state};
+                            setContact(obj_update_state);
+
+                        } else {
+                            setOrgApi(obj_update_state);
+                        }
+                    }
+                    else {
+                        console.log("Что-то пошло не так...")
+                    }
+                });
+        }
+
+        setEditInput(0);
     };
 
     return(
         <>
-            { loader === true && <p>Загрузка ...</p> }
+            { loader === true &&
+                <div className="main">
+                    <div className="main_header">
+                        <p>Загрузка ...</p>
+                    </div>
+                </div>}
+
             { loader === false &&
             <div className="main">
                 <div className="main_header">
@@ -119,14 +210,14 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
                             <div className="org_row">
                                 <div className="twin_col ogr_name">
                                     { editInput === 1 ?
-                                        <MyInput id={orgApi.shortName} className="input" label={orgApi.shortName} /> :
+                                        <MyInput id="org_shortName" className="input" label={orgApi.shortName} /> :
                                         <h1>{orgApi.shortName}</h1> }
 
                                     <IconEdit clickEdit = {() => clickEdit(1)} />
                                 </div>
                             </div>
                             <div className="org_row">
-                                { editInput === 1 && <Button className="btn" name="Сохранить и отправить" btnClick={sendEditData} />}
+                                { editInput === 1 && <Button className="btn" name="Сохранить и отправить" btnClick={() => sendEditData(1)} />}
                             </div>
 
                             <div>
@@ -139,35 +230,35 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
                                 <div className="org_row">
                                     <p className="org_label">Полное название: </p>
                                     { editInput === 2 ?
-                                        <MyInput id={orgApi.name} className="input" label={orgApi.name}  /> :
+                                        <MyInput id="org_name" className="input" label={orgApi.name}  /> :
                                         <p>{orgApi.name}</p>
                                     }
                                 </div>
                                 <div className="org_row">
                                     <p className="org_label">Договор: </p>
                                     { editInput === 2 ?
-                                        <MyInput id={orgApi.id + orgApi.contract.no} className="input" label={orgApi.contract.no + " " + orgApi.contract.issue_date } /> :
-                                        <p>{orgApi.contract.no} от {orgApi.contract.issue_date}</p>
+                                        <MyInput id="org_contract" className="input" label={orgApi.contract.no + " " + orgApi.contract.issue_date.split("T")[0] } /> :
+                                        <p>{orgApi.contract.no} от {orgApi.contract.issue_date.split("T")[0]}</p>
                                     }
                                 </div>
                                 <div className="org_row">
                                     <p className="org_label">Форма: </p>
                                     { editInput === 2 ?
-                                        <MyInput id={orgApi.businessEntity} className="input" label={orgApi.businessEntity } /> :
+                                        <MyInput id="org_businessEntity" className="input" label={orgApi.businessEntity } /> :
                                         <p>{orgApi.businessEntity}</p>
                                     }
                                 </div>
                                 <div className="org_row">
                                     <p className="org_label">Тип: </p>
                                     { editInput === 2 ?
-                                        <MyInput id={99} className="input" label={ orgApi.type.map(el => el + " ")} /> :
+                                        <MyInput id="org_type" className="input" label={ orgApi.type.map(el => el + " ")} /> :
                                         <p>{orgApi.type.map(el => el + " ")}</p>
                                     }
                                 </div>
                                 <div className="org_row">
                                     <p></p>
 
-                                    { editInput === 2 && <Button className="btn" name="Сохранить и отправить" btnClick={sendEditData} />}
+                                    { editInput === 2 && <Button className="btn" name="Сохранить и отправить" btnClick={() => sendEditData(2)} />}
                                 </div>
                             </div>
                         </div>
@@ -184,28 +275,28 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
                             <div className="org_row">
                                 <p className="org_label">ФИО:</p>
                                 {   editInput === 3 ?
-                                    <MyInput id={contact.lastname} className="input" label={ contact.lastname +" "+ contact.firstname +" "+ contact.patronymic} /> :
+                                    <MyInput id="contact_fio" className="input" label={contact.lastname + " " + contact.firstname + " " + contact.patronymic} /> :
                                     <p>{contact.lastname} {contact.firstname} {contact.patronymic}</p>
                                 }
                             </div>
                             <div className="org_row">
                                 <p className="org_label">Телефон:</p>
                                 { editInput === 3 ?
-                                    <MyInput id={contact.phone} className="input" label={contact.phone} /> :
+                                    <MyInput id="contact_tel" className="input" label={contact.phone} /> :
                                     <p>{contact.phone}</p>
                                 }
                             </div>
                             <div className="org_row">
                                 <p className="org_label">Эл. почта:</p>
                                 { editInput === 3 ?
-                                    <MyInput id={contact.email} className="input" label={contact.email} /> :
+                                    <MyInput id="contact_mail" className="input" label={contact.email} /> :
                                     <p><a href={`mailto:${contact.email}`}>{contact.email}</a></p>
                                 }
                             </div>
                             <div className="org_row">
                                 <p></p>
 
-                                { editInput === 3 && <Button className="btn" name="Сохранить и отправить" btnClick={sendEditData} />}
+                                { editInput === 3 && <Button className="btn" name="Сохранить и отправить" btnClick={() => sendEditData(3)} />}
                             </div>
                         </div>
 
@@ -220,7 +311,7 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
                                         {
                                             orgApi.photos.map((photo) => {
                                                 return (
-                                                    <div className="img_container">
+                                                    <div key={photo.name} className="img_container">
                                                         <img src = {photo.thumbpath} alt={`${photo.name}`} />
                                                         <p className="img_name">{photo.name}</p>
                                                         <p className="img_date">{}</p>
@@ -230,8 +321,12 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
                                             })
                                         }
                                     </div>
+                                    { addPhotoInput && <input id="photoinput" className="inp" type='file'/> }
                                 </div>
+
+
                                 <Button className="btn" name="Добавить изображение" btnClick={addPhoto} icon />
+
                             </div>
 
                         </div>
@@ -248,36 +343,3 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
 
 
 export default Organization;
-
-/*    useEffect(() => {
-        async function sendRequest(method, url, token) {
-            return await fetch(url,{
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token,
-                }
-            })
-        }
-        if(token !== ""){
-            sendRequest("GET", `${API_URL}/companies/${org.id}`, token)
-                .then(response => {
-                    if(response.status < 400){
-                        return response.json();
-                    }
-                    if(response.status === 404){
-                        console.log(`Организация с id: ${org.id} не найдена`);
-                    }
-                    else {
-                        console.log("Что-то пошло не так...")
-                    }
-                })
-                .then(data => {
-                    console.log('Ответ с API: ',data);
-                    if(data){
-                        addOrgFromAPI(data);
-                        setLoader(false);
-                    }
-                })
-        }
-    },[]);*/

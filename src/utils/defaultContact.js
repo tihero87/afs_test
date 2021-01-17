@@ -1,6 +1,6 @@
 export const DefaultContact = {
     id: "16",
-    lastname: "...",
+    lastname: "Kyulmyasu",
     firstname: "...",
     patronymic: "...",
     phone: "...",

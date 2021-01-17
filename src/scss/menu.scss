@@ -3,7 +3,7 @@
   max-width: 48px;
   //height: 900px;
   height: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 128px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;

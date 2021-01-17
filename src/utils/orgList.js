@@ -31,12 +31,12 @@ export const List = [
         shortName: "Фирма",
         businessEntity: "АО",
         contract: {
-            no: "",
-            issue_date: "",
+            no: "123456",
+            issue_date: "2020-11-21T08:03:00Z",
         },
         type: [
-            "",
-            ""
+            "agent",
+            "cantractor"
         ],
         status: "active",
         photos: [

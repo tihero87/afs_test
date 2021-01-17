@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, { useRef } from 'react';
 
 const MyInput = ({id, className, label, error, ...attrs}) => {
 
@@ -21,13 +21,15 @@ const MyInput = ({id, className, label, error, ...attrs}) => {
             { attrs.required &&
                 <span className="inputRequired">{attrs.required}</span>
             }
+
             <input
                 id={id}
                 name={id}
                 className={className}
+                defaultValue={label}
                 {...attrs}
                 onChange={handleChange}
-                onClick={() => handleChange}
+                onClick={handleChange}
             />
             { error &&
                 <span className="inputError"> {error} </span>

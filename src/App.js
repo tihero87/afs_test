@@ -3,6 +3,7 @@ import './App.scss';
 import SideBar from "./components/SideBar";
 import Main from "./components/Main";
 import Context from "./hooks/context";
+import Footer from "./components/footer";
 
 function App() {
 
@@ -15,11 +16,10 @@ function App() {
       <Context.Provider value = {{selectedIconMenu}}>
         <div className="wrap">
            <div className='base'>
-
              <SideBar/>
              <Main show = {showId}/>
-
            </div>
+            <Footer/>
         </div>
       </Context.Provider>
     );

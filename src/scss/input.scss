@@ -1,0 +1,79 @@
+input{
+  font-family: $myFont;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  width: 400px;
+  height: 40px;
+  border: 1px solid #CDCDCD;
+  box-sizing: border-box;
+  border-radius: 2px;
+  color: #3B3B3B;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0 12px;
+
+  &:hover{
+    cursor: pointer;
+    border: 1px solid #808080;
+  }
+  &:focus{
+    border: 1px solid #3B3B3B;
+  }
+}
+input.notEmpty{
+  color: #3B3B3B;
+}
+
+.inputWrapper{
+  position: relative;
+  width: 400px;
+  height: 40px;
+  margin-bottom: 20px;
+
+  label{
+    color: #808080;
+  }
+
+  .inputLabel{
+    transition: all 0.4s ease;
+    position: absolute;
+    top:10px;
+    left: 12px;
+    color: #808080 !important;
+    background: #FFFFFF;
+    text-transform: lowercase;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  .inputLabel.empty{
+    left: 12px;
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 20px;
+  }
+  .inputLabel.notEmpty{
+    text-transform: none;
+    left: 8px;
+    top: -6px;
+    line-height: 12px;
+    padding: 0 5px;
+    z-index: 2;
+  }
+
+
+  .inputRequired{
+    color: #808080 !important;
+  }
+
+  .inputError{
+    border-bottom: 1px solid red;
+  }
+}
+.inp,.inp:hover,.inp:active,.inp:focus{
+  border: none;
+}

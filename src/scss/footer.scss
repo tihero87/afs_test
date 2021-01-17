@@ -1,0 +1,21 @@
+.footer{
+  width: 100%;
+  p{
+    font-family: $myFont;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    color: #B9B9B9;
+  }
+  .footer_text{
+    height: 48px;
+    width: 1088px;
+    margin: 20px 40px 60px 312px;
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+  }
+}
