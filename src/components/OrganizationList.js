@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {List} from '../utils/orgList'
-import Organization from "./Organization";
+import Organization from "./organization/Organization";
 
 function OrganizationList({token}) {
     const [organizations, setOrganizations] = useState(List);
