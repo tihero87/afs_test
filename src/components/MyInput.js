@@ -1,16 +1,22 @@
-import React, { useRef } from 'react';
+import React, {useRef, useState} from 'react';
 
-const MyInput = ({id, className, label, error, ...attrs}) => {
+const MyInput = ({value, valid, changeInput, id, className, label, error, ...attrs}) => {
 
     const labelInput = useRef(null);
+    const [dirty, setDirty] = useState(false);
 
     const handleChange = (e) => {
         const myLabel = labelInput.current;
-
-        if(e.target.value !== ""){
-            myLabel.classList.remove('empty');
-            myLabel.classList.add('notEmpty');
-        }
+        console.log('e', e);
+        console.log('changeInput(e) ', changeInput);
+        changeInput(e);
+         if(e.target.value !== ""){
+             myLabel.classList.remove('empty');
+             myLabel.classList.add('notEmpty');
+         }
+    };
+    const onBlur = (e) => {
+        setDirty(true)
     };
 
     return (
@@ -25,11 +31,12 @@ const MyInput = ({id, className, label, error, ...attrs}) => {
             <input
                 id={id}
                 name={id}
-                className={className}
-                defaultValue={label}
+                className={(valid.isEmpty || valid.minLengthError || valid.emailError || valid.phoneError) && dirty ? "inputError input" : className}
+                value={value}
                 {...attrs}
                 onChange={handleChange}
                 onClick={handleChange}
+                onBlur={onBlur}
             />
             { error &&
                 <span className="inputError"> {error} </span>

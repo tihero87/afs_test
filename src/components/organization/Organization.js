@@ -6,14 +6,13 @@ import IconUpdate from "../icons/IconUpdate";
 import IconLinked from "../icons/IconLinked";
 import SendRequest from "../../hooks/useSendRequest";
 import {DefaultContact} from '../../utils/defaultContact';
-
 import ContactPerson from "./ContactPerson";
 import OrganizationInfo from "./OrganizationInfo";
 import AttachPhoto from "./AttachPhoto";
 
 function Organization({org, showListOrg, token, addOrgFromAPI}) {
 
-    const [loader, setLoader] = useState(true);
+    const [loader, setLoader] = useState(false);
     const [orgApi, setOrgApi] = useState(org);
     const [contact, setContact] = useState(DefaultContact);
     const [editInput, setEditInput] = useState(0);
@@ -240,7 +239,5 @@ function Organization({org, showListOrg, token, addOrgFromAPI}) {
         </>
     )
 }
-
-
 
 export default Organization;

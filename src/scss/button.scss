@@ -43,8 +43,14 @@ input{
   color: $colorGray;
   margin-bottom: 20px;
   &:hover{
-    color: $colorBlack
+    color: $colorBlack;
   }
+}
+
+button:disabled,
+.btn:disabled:hover {
+  color: rgba(130,178,132, 0.5);
+  border: 1px solid #E5E5E5;
 }
 
 
